@@ -211,3 +211,6 @@ def api_reset():
     session["game_over"] = False
     new_secret()
     return jsonify({"ok": True, "message": "Juego reiniciado", "points": 0, "tries": 0})
+
+if _name_ == "_main_":
+    app.run(debug=True, host="0.0.0.0", port=5000)
