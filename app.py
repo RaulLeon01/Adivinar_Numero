@@ -174,3 +174,7 @@ def api_guess():
         session["points"] += 100
         new_secret()
         return jsonify({"ok": True, "correct": True, "awarded": 100, "points": session["points"], "tries": session["tries"], "message": "¡Correcto! +100 puntos."})
+    else:
+        new_secret()
+        return jsonify({"ok": True, "correct": False, "points": session["points"], "tries": session["tries"], "message": "Incorrecto. Nuevo número generado."})
+    
