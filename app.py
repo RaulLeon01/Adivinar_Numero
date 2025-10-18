@@ -189,3 +189,15 @@ def reiniciar():
     session["game_over"] = False
     new_secret()
     return redirect(url_for('index'))
+
+@app.post("/reset")
+# Función 6: Reinicia el juego desde una ruta alternativa (/reset)
+# Autor: Raul Corcino
+def reset_game():
+    ensure_session_state()
+    session["points"] = 0
+    session["tries"] = 0
+    session["game_over"] = False
+    new_secret()
+    return redirect(url_for("index"))
+
