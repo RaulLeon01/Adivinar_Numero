@@ -143,3 +143,8 @@ def index():
         tries=session.get("tries", 0),
         game_over=session.get("game_over", False),
     )
+
+@app.post("/api/guess")
+# Función 4: API del juego que procesa intentos de adivinar el número mediante peticiones JSON
+# Autor: Isaak Cabrera
+def api_guess():
