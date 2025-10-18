@@ -132,5 +132,5 @@ def index():
                     new_secret()
                 else:
                     new_secret()
-                    message = "Incorrecto. Se generó un nuevo número. ¡Intenta de nuevo!"
+                    message = "Incorrecto. Se generó un nuevo número. ¡Prueba de nuevo!"
                     css_class = "warn"
