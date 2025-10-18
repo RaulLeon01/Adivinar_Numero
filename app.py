@@ -201,3 +201,13 @@ def reset_game():
     new_secret()
     return redirect(url_for("index"))
 
+@app.post("/api/reset")
+# Función 7: Reinicia el juego mediante la API (ruta /api/reset)
+# Autor: Raul Corcino
+def api_reset():
+    ensure_session_state()
+    session["points"] = 0
+    session["tries"] = 0
+    session["game_over"] = False
+    new_secret()
+    return jsonify({"ok": True, "message": "Juego reiniciado", "points": 0, "tries": 0})
