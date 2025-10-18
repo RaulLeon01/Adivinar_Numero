@@ -166,3 +166,6 @@ def api_guess():
 
     if not (1 <= user_number <= 100):
         return jsonify({"ok": False, "error": "Número fuera de rango (1-100)"}), 400
+
+    session["tries"] += 1
+    secret = session.get("secret")
