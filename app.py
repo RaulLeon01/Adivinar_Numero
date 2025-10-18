@@ -178,3 +178,9 @@ def api_guess():
         new_secret()
         return jsonify({"ok": True, "correct": False, "points": session["points"], "tries": session["tries"], "message": "Incorrecto. Nuevo número generado."})
     
+@app.post("/reiniciar")
+# Función 5: Reinicia el juego desde el formulario del sitio web (botón "Volver a jugar")
+# Autor: Raul Corcino
+def reiniciar():
+    
+    
