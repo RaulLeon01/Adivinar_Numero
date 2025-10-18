@@ -92,8 +92,10 @@ BASE_HTML = """
 </html>
 """
 
-@app.route("/")
-def root():
- return "OK"
+@app.route("/", methods=["GET", "POST"]) # Autor: Isaak Cabrera
+def index():
+ ensure_session_state()
+ return render_template_string(BASE_HTML)
+
 if __name__ == "__main__":
   app.run(debug=True, host="0.0.0.0", port=5000)    
