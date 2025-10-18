@@ -1,4 +1,3 @@
-from flask import Flask, request, render_template_string, session, jsonify, redirect, url_for
 import os
 import random
 
@@ -8,8 +7,8 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY", "cambia-esta-clave")
 # -----------------------------
 # Utilidades de estado (por sesión)
 # -----------------------------
-# Función 1: Asegura que las variables de sesión estén inicializadas
-#(puntos, intentos, número secreto, estado del juego)
+
+# Función 1: Asegura que las variables de sesión estén inicializadas (puntos, intentos, número secreto, estado del juego)
 # Autor: Marvin Rafael
 def ensure_session_state():
     session.setdefault("points", 0)
@@ -92,10 +91,10 @@ BASE_HTML = """
 </html>
 """
 
-@app.route("/", methods=["GET", "POST"]) # Autor: Isaak Cabrera
+@app.route("/peticion", methods=["GET", "POST"])
+@app.route("/juego", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
+# Función 3: Controla la lógica principal del juego desde el navegador (rutas /, /peticion y /juego)
+# Autor: Isaak Cabrera
 def index():
- ensure_session_state()
- return render_template_string(BASE_HTML)
-
-if __name__ == "__main__":
-  app.run(debug=True, host="0.0.0.0", port=5000)    
+    ensure_session_state()
