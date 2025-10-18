@@ -143,38 +143,3 @@ def index():
         tries=session.get("tries", 0),
         game_over=session.get("game_over", False),
     )
-
-@app.post("/api/guess")
-# Función 4: API del juego que procesa intentos de adivinar el número mediante peticiones JSON
-# Autor: Isaak Cabrera
-def api_guess():
-    ensure_session_state()
-    body = request.get_json(silent=True) or {}
-    raw = body.get("user_number", body.get("user_input"))
-
-    if isinstance(raw, str) and raw.strip().lower() == "terminar":
-        session["points"] = 0
-        session["tries"] = 0
-        session["game_over"] = False
-        new_secret()
-        return jsonify({"ok": True, "reset": True, "points": 0, "tries": 0, "message": "Juego terminado y reiniciado."})
-
-    try:
-        user_number = int(raw)
-    except Exception:
-        return jsonify({"ok": False, "error": "'user_number' debe ser un entero o 'terminar'"}), 400
-
-    if not (1 <= user_number <= 100):
-        return jsonify({"ok": False, "error": "Número fuera de rango (1-100)"}), 400
-
-    session["tries"] += 1
-    secret = session.get("secret")
-
-    if user_number == secret:
-        session["points"] += 100
-        new_secret()
-        return jsonify({"ok": True, "correct": True, "awarded": 100, "points": session["points"], "tries": session["tries"], "message": "¡Correcto! +100 puntos."})
-    else:
-        new_secret()
-        return jsonify({"ok": True, "correct": False, "points": session["points"], "tries": session["tries"], "message": "Incorrecto. Nuevo número generado."})
-    
