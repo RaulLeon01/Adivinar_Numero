@@ -148,3 +148,6 @@ def index():
 # Función 4: API del juego que procesa intentos de adivinar el número mediante peticiones JSON
 # Autor: Isaak Cabrera
 def api_guess():
+    ensure_session_state()
+    body = request.get_json(silent=True) or {}
+    raw = body.get("user_number", body.get("user_input"))
