@@ -1,27 +1,99 @@
+from flask import Flask, request, render_template_string, session, jsonify, redirect, url_for
 import os
 import random
-from flask import Flask, session
+
 app = Flask(__name__)
-app.secret_key = os.environ.get(&quot;FLASK_SECRET_KEY&quot;, &quot;cambia-esta-
-clave&quot;)
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "cambia-esta-clave")
+
 # -----------------------------
 # Utilidades de estado (por sesión)
 # -----------------------------
 # Función 1: Asegura que las variables de sesión estén inicializadas
-(puntos, intentos, número secreto, estado del juego)
+#(puntos, intentos, número secreto, estado del juego)
 # Autor: Marvin Rafael
 def ensure_session_state():
-session.setdefault(&quot;points&quot;, 0)
-session.setdefault(&quot;tries&quot;, 0)
-session.setdefault(&quot;secret&quot;, random.randint(1, 100))
-session.setdefault(&quot;game_over&quot;, False)
+    session.setdefault("points", 0)
+    session.setdefault("tries", 0)
+    session.setdefault("secret", random.randint(1, 100))
+    session.setdefault("game_over", False)
+
 # Función 2: Genera un nuevo número secreto aleatorio entre 1 y 100
 # Autor: Leandro Demian
 def new_secret():
-session[&quot;secret&quot;] = random.randint(1, 100)
+    session["secret"] = random.randint(1, 100)
+BASE_HTML = """
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juego: Adivina el número</title>
+  <style>
+    :root { --accent: #6C5CE7; --bg: #F5F7FB; --ok: #00B894; --warn: #E17055; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: #222; display: grid; place-items: center; min-height: 100vh;
+    }
+    .card {
+      width: min(560px, 92vw); background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 10px 25px rgba(0,0,0,.08);
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: .2px; }
+    p.sub { margin: 0 0 20px; color:#555; }
+    form { display:flex; gap:12px; align-items:center; }
+    input[type=text] {
+      flex: 1; padding: 12px 14px; font-size: 16px; border: 2px solid #e9ecf3; border-radius: 12px;
+      outline: none; transition: border-color .2s ease;
+    }
+    input[type=text]:focus { border-color: var(--accent); }
+    button {
+      padding: 12px 18px; font-size: 16px; border: none; border-radius: 12px; cursor: pointer;
+      background: var(--accent); color: white; font-weight: 600; letter-spacing:.3px;
+    }
+    .btn-outline { background: #fff; color: var(--accent); border: 2px solid var(--accent); }
+    .msg { margin-top: 14px; font-size: 16px; padding: 10px 12px; border-radius: 10px; background: #f6f6ff; }
+    .msg.ok { background: #e8fbf3; color: #05603a; border: 1px solid #b5efd5; }
+    .msg.warn { background: #fff0ed; color: #7a2e14; border: 1px solid #ffd5cb; }
+    .row { display:flex; gap:12px; margin-top: 12px; flex-wrap: wrap; }
+    .pill { padding:8px 12px; border-radius: 999px; background:#f0f3fa; font-size:14px; }
+    .points { font-weight:700; color: var(--accent); }
+    .foot { margin-top: 14px; font-size: 13px; color:#666; }
+    code { background:#f0f3fa; padding:2px 6px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Adivina el número del 1 al 100</h1>
+    <p class="sub">Escribe un número o <code>terminar</code> para reiniciar el juego. Si aciertas ganas <strong>+100</strong> y se genera un nuevo número.</p>
 
-@app.route(&quot;/&quot;)
+    <form method="POST" action="{{ url_for('index') }}" autocomplete="off">
+      <input type="text" name="user_input" placeholder="Número (1-100) o 'terminar'" required {% if game_over %}disabled{% endif %} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text">
+      <button type="submit" {% if game_over %}disabled{% endif %}>Probar</button>
+    </form>
+
+    {% if message %}
+      <div class="msg {{ css_class }}">{{ message }}</div>
+    {% endif %}
+
+    <div class="row">
+      <span class="pill">Puntos: <span class="points">{{ points }}</span></span>
+      <span class="pill">Intentos: {{ tries }}</span>
+    </div>
+
+    {% if game_over %}
+    <div class="row">
+      <form method="POST" action="{{ url_for('reiniciar') }}">
+        <button type="submit">Volver a jugar</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
+"""
+
+@app.route("/")
 def root():
-return &quot;OK&quot;
-if __name__ == &quot;__main__&quot;:
-app.run(debug=True, host=&quot;0.0.0.0&quot;, port=5000)
+ return "OK"
+if __name__ == "__main__":
+  app.run(debug=True, host="0.0.0.0", port=5000)    
