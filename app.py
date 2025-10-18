@@ -158,3 +158,8 @@ def api_guess():
         session["game_over"] = False
         new_secret()
         return jsonify({"ok": True, "reset": True, "points": 0, "tries": 0, "message": "Juego terminado y reiniciado."})
+
+    try:
+        user_number = int(raw)
+    except Exception:
+        return jsonify({"ok": False, "error": "'user_number' debe ser un entero o 'terminar'"}), 400
