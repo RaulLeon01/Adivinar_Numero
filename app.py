@@ -163,3 +163,6 @@ def api_guess():
         user_number = int(raw)
     except Exception:
         return jsonify({"ok": False, "error": "'user_number' debe ser un entero o 'terminar'"}), 400
+
+    if not (1 <= user_number <= 100):
+        return jsonify({"ok": False, "error": "Número fuera de rango (1-100)"}), 400
