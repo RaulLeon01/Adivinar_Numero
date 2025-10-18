@@ -134,3 +134,12 @@ def index():
                     new_secret()
                     message = "Incorrecto. Se generó un nuevo número. ¡Prueba de nuevo!"
                     css_class = "warn"
+
+    return render_template_string(
+        BASE_HTML,
+        message=message,
+        css_class=css_class,
+        points=session.get("points", 0),
+        tries=session.get("tries", 0),
+        game_over=session.get("game_over", False),
+    )
