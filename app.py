@@ -151,3 +151,10 @@ def api_guess():
     ensure_session_state()
     body = request.get_json(silent=True) or {}
     raw = body.get("user_number", body.get("user_input"))
+
+    if isinstance(raw, str) and raw.strip().lower() == "terminar":
+        session["points"] = 0
+        session["tries"] = 0
+        session["game_over"] = False
+        new_secret()
+        return jsonify({"ok": True, "reset": True, "points": 0, "tries": 0, "message": "Juego terminado y reiniciado."})
